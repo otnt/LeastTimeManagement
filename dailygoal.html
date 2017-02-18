@@ -9,11 +9,34 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   </head>
   <body>
-    <h1>Hello, world!</h1>
+    <div class="container">
+      <div class="row">
+        <h1 id="dg-header" class="mx-auto my-5">You have {{ dgcount }} goals today</h1>
+      </div>
+
+      <daily-goal-wait-1></daily-goal-wait-1>
+      <daily-goal-wait-2></daily-goal-wait-2>
+      <daily-goal-wait-3></daily-goal-wait-3>
+      <daily-goal-wait-4></daily-goal-wait-4>
+
+      <daily-goal-active-1></daily-goal-active-1>
+      <daily-goal-active-2></daily-goal-active-2>
+      <daily-goal-active-3></daily-goal-active-3>
+      <daily-goal-active-4></daily-goal-active-4>
+
+
+    </div>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+    <!-- My files. -->
+    <link rel="stylesheet" href="./dailygoal.css">
+    <script src="./dailygoal.js"></script>
   </body>
 </html>
