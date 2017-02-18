@@ -1,4 +1,8 @@
-.main-wrapper {
-  height: 700px; }
+.main-card {
+  height: 200px; }
+
+@media (min-width: 768px) {
+  .main-card {
+    height: 300px; } }
 
 /*# sourceMappingURL=home.css.map */

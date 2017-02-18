@@ -1,3 +1,11 @@
-.main-wrapper {
-  height: 700px;
+@import "variables.scss";
+
+.main-card {
+  height: 200px;
+}
+
+@media (min-width: #{$md}) {
+  .main-card {
+    height: 300px;
+  }
 }
