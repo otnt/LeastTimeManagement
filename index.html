@@ -9,12 +9,58 @@
   </head>
   <body>
     <div class="container text-center">
-      <h1>Least Time Management</h1>
+      <h1 class="my-5">Least Time Management</h1>
+
+      <!-- On desktop, use a grid of 2x2 to display cards.
+      On mobile phones, let each card take place of entire row -->
+      <div class="row" style="height: 700px;">
+        <!-- Daily goal. -->
+        <div class="card card-inverse col-12 col-md-6 border-0 rounded my-2">
+          <div class="card-img daily-goal-img w-100 h-100">
+          </div>
+          <div class="card-img-overlay d-flex align-items-start flex-column">
+            <h4 class="card-title mx-auto mt-3">Daily Goal</h4>
+            <p class="card-text my-auto mx-auto">Set up your daily goal (up to 5) and commit to these goals.</p>
+          </div>
+        </div>
+
+        <!-- Habit. -->
+        <div class="card card-inverse col-12 col-md-6 border-0 rounded my-2">
+          <div class="card-img habit-img w-100 h-100">
+          </div>
+          <div class="card-img-overlay d-flex align-items-start flex-column">
+            <h4 class="card-title mx-auto mt-3">Habit</h4>
+            <p class="card-text my-auto mx-auto">Keep at most 2 habits at one time.</p>
+          </div>
+        </div>
+
+        <!-- Pomodoro. -->
+        <div class="card card-inverse col-12 col-md-6 border-0 rounded my-2">
+          <div class="card-img pomodoro-img w-100 h-100">
+          </div>
+          <div class="card-img-overlay d-flex align-items-start flex-column">
+            <h4 class="card-title mx-auto mt-3">Pomodoro</h4>
+            <p class="card-text my-auto mx-auto">Focus on current task for 30 minutes.</p>
+          </div>
+        </div>
+
+        <!-- Motivation. -->
+        <div class="card card-inverse col-12 col-md-6 border-0 rounded my-2">
+          <div class="card-img motivation-img w-100 h-100">
+          </div>
+          <div class="card-img-overlay d-flex align-items-start flex-column">
+            <h4 class="card-title mx-auto mt-3">Motivation</h4>
+            <p class="card-text my-auto mx-auto">Earn money if you reach your goal, and lose money if you fail.</p>
+          </div>
+        </div>
+
     </div>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./home.css">
   </body>
 </html>
