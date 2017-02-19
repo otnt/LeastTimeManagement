@@ -1,3 +1,6 @@
-$( ".js-daily-goal" ).click(function() {
-  window.location="./dailygoal.html";
+// wait for document to load
+$(document).ready(() => {
+  $(".js-daily-goal").click(() => {
+    window.location="./dailygoal.html";
+  });
 });

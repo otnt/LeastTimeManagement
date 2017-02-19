@@ -5,8 +5,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <!-- Bootstrap and jQuery -->
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
+    <script src="node_modules/tether/dist/js/tether.min.js"></script>
+
+    <!-- My files. -->
+    <link rel="stylesheet" href="./dailygoal.css">
+    <script src="./dailygoal.js"></script>
   </head>
   <body>
     <div class="container">
@@ -14,14 +22,5 @@
         <h1 class="mx-auto my-5">Daily Goal</h1>
       </div>
     </div>
-
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-
-    <!-- My files. -->
-    <link rel="stylesheet" href="./dailygoal.css">
-    <script src="./dailygoal.js"></script>
   </body>
 </html>
