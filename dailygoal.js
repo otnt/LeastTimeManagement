@@ -1,46 +1,82 @@
-// Initialize daily goal counter.
-var dgHeader = new Vue({
-  el: '#dg-header',
-  data: {
-    dgcount: '0'
+
+// MAX_WIDTH of Bootstrap is 12 columns.
+const MAX_WIDTH = 12;
+
+// Maximum level.
+const MAX_LEVEL = 4;
+
+// Class name for focused daily goal list.
+const DG_FOCUS_CLASS = "dg-focus";
+
+// Class name for not focused daily goal list.
+const DG_NOT_FOCUS_CLASS = "dg-not-focus";
+
+function getWidthByLevel(level) {
+  return MAX_WIDTH - level;
+}
+
+function getOffsetByLevel(level) {
+  return level;
+}
+
+/**
+ * When click a wait element, turn into active.
+ *
+ * `element` should be a jQuery element.
+ */
+function bindDailyGoalElementAction(element) {
+  element.click(() => {
+    if (element.hasClass(DG_NOT_FOCUS_CLASS)) {
+      element.toggleClass(DG_NOT_FOCUS_CLASS);
+      element.toggleClass(DG_FOCUS_CLASS);
+    }
+  });
+};
+
+/**
+ * Make a daily goal element.
+ */
+function makeDailyGoalElement(level, value) {
+  let placeholder = "";
+  if (!value) {
+    placeholder = "Add a daily goal...";
+    // Value could be undefined etc.
+    value = "";
   }
-})
 
-// Initialize component of daily goal list.
+  const dailyGoalElement = $(
+    `<div>
+      <div class="row my-1 ${DG_NOT_FOCUS_CLASS}">
+        <input class="form-control mb-2 col-${getWidthByLevel(level)} offset-${getOffsetByLevel(level)}" type="text" placeholder="${placeholder}" value="${value}">
+        <button type="button" class="btn btn-success col-1 offset-${getOffsetByLevel(level)} mr-2">Save</button>
+        <button type="button" class="btn btn-warning col-1 mr-2">Cancel</button>
+        <button type="button" class="btn btn-danger col-1">Delete</button>
+      </div>
+    </div>`);
 
-var registerWaitComponent = function(order, width, offset) {
-  Vue.component(`daily-goal-wait-${order}`, {
-    template:
-    `<div class="row my-1">
-      <input class="form-control mb-2 col-${width} offset-${offset} " type="text" placeholder="Add a daily goal...">
-    </div>`
-  })
-}
+  bindDailyGoalElementAction(dailyGoalElement.find("div.row").first());
 
-registerWaitComponent(1, 12, 0)
-registerWaitComponent(2, 11, 1)
-registerWaitComponent(3, 10, 2)
-registerWaitComponent(4, 9, 3)
+  return dailyGoalElement;
+};
 
-var registerActiveComponent = function(order, width, offset) {
-  Vue.component(`daily-goal-active-${order}`, {
-    template:
-    `<div class="row my-1">
-      <input class="form-control mb-2 col-${width} offset-${offset} " type="text" placeholder="Add a daily goal...">
-      <div class="w-100"></div>
-      <button type="button" class="btn btn-success col-1 offset-${offset} align-self-start mr-2">Save</button>
-      <button type="button" class="btn btn-danger col-1 align-self-start">Discard</button>
-    </div>`
-  })
-}
+/**
+ * Recursively add all items in `dgList` to `containerElement`,
+ * with indentation set by `level`.
+ */
+function addDailyGoalToElement(containerElement, dgList, level) {
+  if (!level) {
+    level = 0;
+  }
 
-registerActiveComponent(1, 12, 0)
-registerActiveComponent(2, 11, 1)
-registerActiveComponent(3, 10, 2)
-registerActiveComponent(4, 9, 3)
+  for (let i = 0; i < dgList.length; i += 1) {
+    const dg = dgList[i];
+    const dgElement = makeDailyGoalElement(level, dg.value);
+    containerElement.append(dgElement);
+    if (level < MAX_LEVEL - 1) {
+      addDailyGoalToElement(dgElement, dg.children, level + 1);
+    }
+  }
 
-// Initialize
-new Vue({
-  el: '.container',
-  data: {}
-})
+  // Reserve one line to add new list.
+  containerElement.append(makeDailyGoalElement(level));
+};

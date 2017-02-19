@@ -2,3 +2,17 @@
   text-align: left;
   color: grey;
 }
+
+.dg-not-focus {
+  .dg-line-breaker,
+  button {
+    display: none;
+  }
+}
+
+.dg-focus {
+  .dg-line-breaker,
+  button {
+    display: block;
+  }
+}
