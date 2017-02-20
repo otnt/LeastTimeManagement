@@ -21,7 +21,7 @@ define({
 		// { browserName: 'internet explorer', version: '10', platform: 'WIN8' },
 		// { browserName: 'internet explorer', version: '9', platform: 'WINDOWS' },
 		// { browserName: 'firefox', version: '37', platform: [ 'WINDOWS', 'MAC' ] },
-		{ browserName: 'chrome', version: '39', platform: [ 'WINDOWS', 'MAC' ] }
+		{ browserName: 'chrome', version: '39', platform: [ 'MAC' ] }
 		// { browserName: 'safari', version: '8', platform: 'MAC' }
 	],
 
@@ -30,7 +30,7 @@ define({
 
 	// Name of the tunnel class to use for WebDriver tests.
 	// See <https://theintern.github.io/intern/#option-tunnel> for built-in options
-	tunnel: 'BrowserStackTunnel',
+	tunnel: 'SauceLabsTunnel',
 
 	// Configuration options for the module loader; any AMD configuration options supported by the AMD loader in use
 	// can be used here.
