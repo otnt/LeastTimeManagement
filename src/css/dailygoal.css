@@ -1,13 +1,11 @@
 .btn-dg-wait {
   text-align: left;
-  color: grey; }
+  color: grey;
+}
 
-.dg-not-focus .dg-line-breaker,
-.dg-not-focus button {
-  display: none; }
-
-.dg-focus .dg-line-breaker,
-.dg-focus button {
-  display: block; }
-
-/*# sourceMappingURL=dailygoal.css.map */
+.dg-lists button {
+  display: none;
+}
+.dg-lists .dg-focus button {
+  display: block;
+}

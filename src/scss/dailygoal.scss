@@ -3,16 +3,14 @@
   color: grey;
 }
 
-.dg-not-focus {
-  .dg-line-breaker,
+.dg-lists {
   button {
     display: none;
   }
-}
 
-.dg-focus {
-  .dg-line-breaker,
-  button {
-    display: block;
+  .dg-focus {
+    button {
+      display: block;
+    }
   }
 }
