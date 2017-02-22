@@ -5,7 +5,9 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "remote-test": "./node_modules/.bin/intern-runner config=tests/intern"
+    "test": "./node_modules/.bin/intern-runner config=tests/intern",
+    "lint": "bash ./lint.sh",
+    "build": "bash ./build.sh; "
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -18,7 +20,15 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-preset-env": "^1.1.8",
+    "bluebird": "^3.4.7",
+    "browserify": "^14.1.0",
+    "chai-as-promised": "^6.0.0",
     "electron": "^1.4.1",
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb-base": "^11.1.0",
+    "eslint-plugin-import": "^2.2.0",
     "intern": "^3.4.2",
     "spectron": "^3.6.0"
   },
@@ -27,5 +37,10 @@
     "jquery": "^3.1.0",
     "localforage": "^1.5.0",
     "sprintf-js": "^1.0.3"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
   }
 }
