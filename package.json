@@ -6,8 +6,7 @@
   "scripts": {
     "start": "electron .",
     "test": "./node_modules/.bin/intern-runner config=tests/intern",
-    "lint": "bash ./lint.sh",
-    "build": "bash ./build.sh; "
+    "lint": "bash ./lint.sh"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
