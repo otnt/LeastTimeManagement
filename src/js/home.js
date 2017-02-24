@@ -1,6 +1,8 @@
+"use strict";
+
 // wait for document to load
-$(document).ready(() => {
-  $(".js-daily-goal").click(() => {
-    window.location="./src/html/dailygoal.html";
+$(document).ready(function () {
+  $(".js-daily-goal").click(function () {
+    window.location = "./src/html/dailygoal.html";
   });
 });

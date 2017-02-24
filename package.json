@@ -25,11 +25,13 @@
     "bluebird": "^3.4.7",
     "browserify": "^14.1.0",
     "chai-as-promised": "^6.0.0",
-    "electron": "^1.4.1",
+    "electron": "^1.4.15",
+    "electron-prebuilt": "^1.4.13",
     "eslint": "^3.15.0",
     "eslint-config-airbnb-base": "^11.1.0",
     "eslint-plugin-import": "^2.2.0",
     "intern": "^3.4.2",
+    "mocha": "^3.2.0",
     "spectron": "^3.6.0"
   },
   "dependencies": {
