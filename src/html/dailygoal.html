@@ -7,11 +7,14 @@
 
     <!-- Bootstrap and jQuery -->
     <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <script src="../../src/js-min/bootstrapjquery.min.js"></script>
+    <script>
+        window.$ = window.jQuery = require('jquery');
+	require('tether');
+    </script>
 
     <!-- My files. -->
-    <link rel="stylesheet" href="../../src/css/dailygoal.css">
-    <script src="../../src/js-min/dailygoal.min.js"></script>
+    <link rel="stylesheet" href="../css/dailygoal.css">
+    <script src="../js/dailygoal.js"></script>
   </head>
   <body>
     <div class="container">

@@ -1,15 +1,13 @@
-'use strict';
-
 /* eslint-disable no-param-reassign */
 
 // MAX_WIDTH of Bootstrap is 12 columns.
-var MAX_WIDTH = 12;
+const MAX_WIDTH = 12;
 
 // Maximum level.
-var MAX_LEVEL = 4;
+const MAX_LEVEL = 4;
 
 // Use date as key to database.
-var dateKey = "";
+let dateKey = "";
 
 /* JSON-formated data of daily goal lists.
  * Format:
@@ -24,28 +22,31 @@ var dateKey = "";
  *   ...
  * ]
  */
-var dailyGoalData = [];
+let dailyGoalData = [];
 
 // Localforage module is local simple database.
-var localforage = require('localforage');
+const localforage = require('localforage');
 
 // Sprintf module is same as printf in C.
-var sprintf = require('sprintf-js').sprintf;
+const sprintf = require('sprintf-js').sprintf;
 
 // jQuery.
-var $ = require('jquery');
+const $ = require('jquery');
 
-var loadDailyGoalList = function loadDailyGoalList() {
+const loadDailyGoalList = function loadDailyGoalList() {
   // Remove all daily goal lists.
   $('.container').find('.dg-lists').remove();
 
   // Render to front end.
-  addDailyGoalToElement($('.container'), dailyGoalData, []);
+  addDailyGoalToElement(
+    $('.container'),
+    dailyGoalData,
+    []);
 };
 
-var loadDailyGoalListFromDatabase = function loadDailyGoalListFromDatabase(key) {
+const loadDailyGoalListFromDatabase = function loadDailyGoalListFromDatabase(key) {
   // Load daily goal data from database, then render to front end.
-  localforage.getItem(key).then(function (value) {
+  localforage.getItem(key).then((value) => {
     // If the value is empty or null, then leave it as empty list.
     if (!value) {
       dailyGoalData = [];
@@ -54,7 +55,7 @@ var loadDailyGoalListFromDatabase = function loadDailyGoalListFromDatabase(key) 
     }
 
     loadDailyGoalList();
-  }).catch(function (err) {
+  }).catch((err) => {
     console.log(err);
   });
 };
@@ -64,26 +65,24 @@ var loadDailyGoalListFromDatabase = function loadDailyGoalListFromDatabase(key) 
  *
  * `element` should be a jQuery element.
  */
-var bindDailyGoalElementAction = function bindDailyGoalElementAction(element) {
-  element.click(function () {
+const bindDailyGoalElementAction = function bindDailyGoalElementAction(element) {
+  element.click(() => {
     if (!element.hasClass('dg-focus')) {
       element.toggleClass('dg-focus');
     }
   });
 };
 
-var bindDailyGoalSaveButton = function bindDailyGoalSaveButton(button, id, input) {
-  button.click(function () {
+const bindDailyGoalSaveButton = function bindDailyGoalSaveButton(button, id, input) {
+  button.click(() => {
     // Path to desired JSON node.
-    var path = id.split('-').map(function (num) {
-      return parseInt(num, 10);
-    });
+    const path = id.split('-').map(num => parseInt(num, 10));
 
     // Route to the node.
-    var node = dailyGoalData;
-    for (var level = 0; level < path.length; level += 1) {
+    let node = dailyGoalData;
+    for (let level = 0; level < path.length; level += 1) {
       // At level `level`, the childIdx-th child.
-      var childIdx = path[level];
+      const childIdx = path[level];
       if (level !== path.length - 1) {
         node = node[childIdx].children;
       } else if (childIdx !== node.length) {
@@ -101,11 +100,11 @@ var bindDailyGoalSaveButton = function bindDailyGoalSaveButton(button, id, input
   });
 };
 
-var getWidthByLevel = function getWidthByLevel(level) {
+const getWidthByLevel = function getWidthByLevel(level) {
   return MAX_WIDTH - level;
 };
 
-var getOffsetByLevel = function getOffsetByLevel(level) {
+const getOffsetByLevel = function getOffsetByLevel(level) {
   return level;
 };
 
@@ -116,21 +115,32 @@ var getOffsetByLevel = function getOffsetByLevel(level) {
  * value: content in this sub-list
  * traverse: How to route to this list/node from root.
  */
-var makeDailyGoalElement = function makeDailyGoalElement(level, value, traverse) {
-  var placeholder = '';
+const makeDailyGoalElement = function makeDailyGoalElement(level, value, traverse) {
+  let placeholder = '';
   if (!value) {
     placeholder = 'Add a daily goal...';
     // Value could be undefined etc.
     value = '';
   }
 
-  var id = traverse.join('-');
+  const id = traverse.join('-');
 
-  var dailyGoalElement = $('<div class=\'dg-lists\' id=\'' + id + '\'>\n      <div class=\'row my-1\'>\n        <input class=\'form-control mb-2 col-' + getWidthByLevel(level) + ' offset-' + getOffsetByLevel(level) + '\' type=\'text\' placeholder=\'' + placeholder + '\' value=\'' + value + '\'>\n        <button type=\'button\' class=\'btn btn-success col-2 offset-' + getOffsetByLevel(level) + ' mr-2\'>Save</button>\n        <button type=\'button\' class=\'btn btn-warning col-2 mr-2\'>Cancel</button>\n        <button type=\'button\' class=\'btn btn-danger col-2\'>Delete</button>\n      </div>\n    </div>');
+  const dailyGoalElement = $(
+    `<div class='dg-lists' id='${id}'>
+      <div class='row my-1'>
+        <input class='form-control mb-2 col-${getWidthByLevel(level)} offset-${getOffsetByLevel(level)}' type='text' placeholder='${placeholder}' value='${value}'>
+        <button type='button' class='btn btn-success col-2 offset-${getOffsetByLevel(level)} mr-2'>Save</button>
+        <button type='button' class='btn btn-warning col-2 mr-2'>Cancel</button>
+        <button type='button' class='btn btn-danger col-2'>Delete</button>
+      </div>
+    </div>`);
 
   bindDailyGoalElementAction(dailyGoalElement.find('div.row').first());
 
-  bindDailyGoalSaveButton(dailyGoalElement.find('button.btn-success').first(), id, dailyGoalElement.find('input'));
+  bindDailyGoalSaveButton(
+    dailyGoalElement.find('button.btn-success').first(),
+    id,
+    dailyGoalElement.find('input'));
 
   return dailyGoalElement;
 };
@@ -139,16 +149,18 @@ var makeDailyGoalElement = function makeDailyGoalElement(level, value, traverse)
  * Recursively add all items in `dgList` to `containerElement`,
  * with indentation set by `level`.
  */
-var addDailyGoalToElement = function addDailyGoalToElement(containerElement, dgList, traverse) {
-  var level = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-
-  for (var i = 0; i < dgList.length; i += 1) {
+const addDailyGoalToElement = function addDailyGoalToElement(
+  containerElement,
+  dgList,
+  traverse,
+  level = 0) {
+  for (let i = 0; i < dgList.length; i += 1) {
     // Add traverse route.
     traverse[level] = i;
 
     // For each direct child in the same level, append to `containerElement`.
-    var dg = dgList[i];
-    var dgElement = makeDailyGoalElement(level, dg.value, traverse);
+    const dg = dgList[i];
+    const dgElement = makeDailyGoalElement(level, dg.value, traverse);
     containerElement.append(dgElement);
 
     // For children in next level, recursively call `addDailyGoalToElement` to
@@ -165,17 +177,17 @@ var addDailyGoalToElement = function addDailyGoalToElement(containerElement, dgL
   containerElement.append(makeDailyGoalElement(level, null, traverse));
 };
 
-var getCurrentDateKey = function getCurrentDateKey() {
+const getCurrentDateKey = function getCurrentDateKey() {
   // Use YYYY-MM-dd as primary key in database.
-  var date = new Date();
-  var key = sprintf('%d%02d%02d', date.getFullYear(), date.getMonth(), date.getDate());
+  const date = new Date();
+  const key = sprintf('%d%02d%02d', date.getFullYear(), date.getMonth(), date.getDate());
   return key;
 };
 
 /**
  * Load database for daily goal list.
  */
-var init = function init() {
+const init = function init() {
   dateKey = getCurrentDateKey();
   loadDailyGoalListFromDatabase(dateKey);
 };

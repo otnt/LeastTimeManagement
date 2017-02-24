@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "./node_modules/.bin/intern-runner config=tests/intern",
+    "test": "./node_modules/mocha/bin/mocha",
     "lint": "bash ./lint.sh"
   },
   "repository": "https://github.com/electron/electron-quick-start",
