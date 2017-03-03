@@ -5,20 +5,52 @@ const chai = require('chai');
 const expect = chai.expect;
 const chaiAsPromised = require('chai-as-promised');
 
+const assertVisibleLength = function assertVisibleLength(items, length) {
+  return items
+    .getCssProperty('display')
+    .then((properties) => {
+      let visibles;
+      if (properties.constructor === Array) {
+        visibles = properties.filter(property => property.value !== 'none');
+      } else {
+        visibles = [properties.value];
+      }
+      expect(visibles.length).to.be.equal(length);
+    });
+};
+
+const assertInvisibleLength = function assertInvisibleLength(items, length) {
+  return items
+    .getCssProperty('display')
+    .then((properties) => {
+      let visibles;
+      if (properties.constructor === Array) {
+        visibles = properties.filter(property => property.value === 'none');
+      } else {
+        visibles = [properties.value];
+      }
+      expect(visibles.length).to.be.equal(length);
+    });
+};
+
 global.before(function () {
     chai.should();
     chai.use(chaiAsPromised);
 });
 
 describe('naive test', function () {
-  this.timeout(5000);
-
   beforeEach(function() {
     this.app = new Application({
         path: electron,
         args: ['.']
     });
     return this.app.start();
+  });
+
+  beforeEach(function() {
+    // Implicit timeout wait for functions like 'elements'.
+    // http://webdriver.io/guide/testrunner/timeouts.html#Session-Implicit-Wait-Timeout
+    this.app.client.timeouts('implicit', 5000);
   });
 
   beforeEach(function() {
@@ -33,41 +65,37 @@ describe('naive test', function () {
   });
 
   it('when initially open, check no buttons visible', function() {
-    return this.app.client
-      .elements('button')
-      .then(function(buttons) {
-        expect(buttons.value.length).to.be.equal(0);
-      });
+    return assertInvisibleLength(this.app.client.elements('button'), 4);
   });
 
-  it('when click add row, check three buttons (save, cancel, delete) exist', function() {
-    return this.app.client
-      .click('div.row')
-      .elements('button')
-      .then(function(buttons) {
-        expect(buttons.value.length).to.be.equal(3);
-      });
+  it('when initially open, check one input is there', function() {
+    return assertVisibleLength(this.app.client.elements('input'), 1);
+  });
+
+  it('when click add row, check four buttons (save, add sublist, cancel, delete) exist', function() {
+    return assertVisibleLength(
+      this.app.client
+        .click('input')
+        .elements('button'), 4);
   });
 
   it('after save an item, one more empty item on same level should appear', function() {
-    return this.app.client
-      .click('input')
-      .setValue('input', 'test goal')
-      .click('button.btn-success')
-      .elements('input')
-      .then(function(inputs) {
-        expect(inputs.value.length).to.be.equal(3);
-      });
+    return assertVisibleLength(
+      this.app.client
+        .click('input')
+        .setValue('input', 'test goal')
+        .click('button.btn-success')
+        .elements('input'),
+      2);
   });
 
   it('after save an item, buttons should disappear', function() {
-    return this.app.client
-      .click('input')
-      .setValue('input', 'test goal')
-      .click('button.btn-success')
-      .elements('button')
-      .then(function(buttons) {
-        expect(buttons.value.length).to.be.equal(0);
-      });
+    return assertVisibleLength(
+      this.app.client
+        .click('input')
+        .setValue('input', 'test goal')
+        .click('button.btn-success')
+        .elements('button'),
+      0);
   });
 })
