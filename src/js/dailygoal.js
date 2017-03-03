@@ -81,7 +81,8 @@ const dailyGoalSaveButtonAction = function dailyGoalSaveButtonAction(id, input) 
     }
 
     // Path to desired JSON node.
-    const path = id.split('-').map(num => parseInt(num, 10));
+    // ID format: dg-x-y-z-...
+    const path = id.split('-').slice(1).map(num => parseInt(num, 10));
 
     // Route to the node.
     let node = dailyGoalData;
@@ -116,8 +117,8 @@ const dailyGoalAddSublistButtonAction = function dailyGoalAddSublistButtonAction
     dailyGoalSaveButtonAction(id, input)();
 
     // Path to desired JSON node.
-    const path = id.split('-').map(num => parseInt(num, 10));
-    console.log(path);
+    // ID format: dg-x-y-z-...
+    const path = id.split('-').slice(1).map(num => parseInt(num, 10));
 
     // Route to the node.
     let node = $('.container').first();
@@ -158,7 +159,7 @@ const makeDailyGoalElement = function makeDailyGoalElement(level, value, travers
     value = '';
   }
 
-  const id = traverse.join('-');
+  const id = `dg-${traverse.join('-')}`;
 
   const dailyGoalElement = $(
     `<div class='dg-lists' id='${id}'>
@@ -171,13 +172,14 @@ const makeDailyGoalElement = function makeDailyGoalElement(level, value, travers
       </div>
     </div>`);
 
-  dailyGoalElement.find('input').first().click(dailyGoalInputAction(dailyGoalElement.find('div.row').first()));
+  dailyGoalElement.find('input').first().focus(dailyGoalInputAction(dailyGoalElement.find('div.row').first()));
 
   dailyGoalElement.find('button.dg-btn-save').first()
     .click(dailyGoalSaveButtonAction(id, dailyGoalElement.find('input')));
 
   dailyGoalElement.find('button.dg-btn-sub-list').first()
     .click(dailyGoalAddSublistButtonAction(id, dailyGoalElement.find('input')));
+
 
   return dailyGoalElement;
 };
