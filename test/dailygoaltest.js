@@ -48,4 +48,26 @@ describe('naive test', function () {
         expect(buttons.value.length).to.be.equal(3);
       });
   });
+
+  it('after save an item, one more empty item on same level should appear', function() {
+    return this.app.client
+      .click('input')
+      .setValue('input', 'test goal')
+      .click('button.btn-success')
+      .elements('input')
+      .then(function(inputs) {
+        expect(inputs.value.length).to.be.equal(3);
+      });
+  });
+
+  it('after save an item, buttons should disappear', function() {
+    return this.app.client
+      .click('input')
+      .setValue('input', 'test goal')
+      .click('button.btn-success')
+      .elements('button')
+      .then(function(buttons) {
+        expect(buttons.value.length).to.be.equal(0);
+      });
+  });
 })
