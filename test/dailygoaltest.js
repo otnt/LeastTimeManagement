@@ -84,7 +84,7 @@ describe('naive test', function () {
       this.app.client
         .click('input')
         .setValue('input', 'test goal')
-        .click('button.btn-success')
+        .click('button.dg-btn-save')
         .elements('input'),
       2);
   });
@@ -94,8 +94,27 @@ describe('naive test', function () {
       this.app.client
         .click('input')
         .setValue('input', 'test goal')
-        .click('button.btn-success')
+        .click('button.dg-btn-save')
         .elements('button'),
       0);
+  });
+
+  it('after add sublist, automatically saved', function() {
+    return this.app.client
+      .click('input')
+      .setValue('input', 'test goal')
+      .click('button.dg-btn-sub-list')
+      .element('input') // Search for the first one.
+      .getValue()
+      .then(value => expect(value).to.be.equal('test goal'));
+  });
+
+  it('after add sublist, one input appear at next level', function() {
+    return this.app.client
+      .click('input')
+      .setValue('input', 'test goal')
+      .click('button.dg-btn-sub-list')
+      .elements('.dg-lists') // Search for the first one.
+      .then(items => expect(items.value.length).to.be.equal(3));
   });
 })

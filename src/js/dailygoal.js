@@ -73,8 +73,8 @@ const bindDailyGoalElementAction = function bindDailyGoalElementAction(element) 
   });
 };
 
-const bindDailyGoalSaveButton = function bindDailyGoalSaveButton(button, id, input) {
-  button.click(() => {
+const dailyGoalSaveButtonAction = function dailyGoalSaveButtonAction(id, input) {
+  return function() {
     const val = input.val();
     if (!val) {
       return;
@@ -102,7 +102,37 @@ const bindDailyGoalSaveButton = function bindDailyGoalSaveButton(button, id, inp
 
     // Refresh content.
     loadDailyGoalList();
-  });
+  };
+};
+
+const dailyGoalAddSublistButtonAction = function dailyGoalAddSublistButtonAction(id, input) {
+  return function() {
+    const val = input.val();
+    if (!val) {
+      return;
+    }
+
+    // Before add sublist, as if we saved the current list.
+    dailyGoalSaveButtonAction(id, input)();
+
+    // Path to desired JSON node.
+    const path = id.split('-').map(num => parseInt(num, 10));
+    console.log(path);
+
+    // Route to the node.
+    let node = $('.container').first();
+    for (let level = 0; level < path.length; level += 1) {
+      // At level `level`, the childIdx-th child.
+      const childIdx = path[level];
+      node = node.children(`.dg-lists`).eq(childIdx);
+    }
+
+    // Copy the path, and add new level (0) as the sublist traverse path.
+    const traverse = path.slice();
+    traverse.push(0);
+    const dgElement = makeDailyGoalElement(path.length, null, traverse);
+    node.append(dgElement);
+  }
 };
 
 const getWidthByLevel = function getWidthByLevel(level) {
@@ -134,19 +164,20 @@ const makeDailyGoalElement = function makeDailyGoalElement(level, value, travers
     `<div class='dg-lists' id='${id}'>
       <div class='row my-1'>
         <input class='form-control mb-2 col-${getWidthByLevel(level)} offset-${getOffsetByLevel(level)}' type='text' placeholder='${placeholder}' value='${value}'>
-        <button type='button' class='btn btn-success col-2 offset-${getOffsetByLevel(level)} mr-2'>Save</button>
-        <button type='button' class='btn btn-info col-2 mr-2'>Add sub-list</button>
-        <button type='button' class='btn btn-warning col-2 mr-2'>Cancel</button>
-        <button type='button' class='btn btn-danger col-2'>Delete</button>
+        <button type='button' class='dg-btn-save btn btn-success col-2 offset-${getOffsetByLevel(level)} mr-2'>Save</button>
+        <button type='button' class='dg-btn-sub-list btn btn-info col-2 mr-2'>Add sub-list</button>
+        <button type='button' class='dg-btn-cancel btn btn-warning col-2 mr-2'>Cancel</button>
+        <button type='button' class='dg-btn-delete btn btn-danger col-2'>Delete</button>
       </div>
     </div>`);
 
   bindDailyGoalElementAction(dailyGoalElement.find('div.row').first());
 
-  bindDailyGoalSaveButton(
-    dailyGoalElement.find('button.btn-success').first(),
-    id,
-    dailyGoalElement.find('input'));
+  dailyGoalElement.find('button.dg-btn-save').first()
+    .click(dailyGoalSaveButtonAction(id, dailyGoalElement.find('input')));
+
+  dailyGoalElement.find('button.dg-btn-sub-list').first()
+    .click(dailyGoalAddSublistButtonAction(id, dailyGoalElement.find('input')));
 
   return dailyGoalElement;
 };
