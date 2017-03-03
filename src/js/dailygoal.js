@@ -130,6 +130,7 @@ const makeDailyGoalElement = function makeDailyGoalElement(level, value, travers
       <div class='row my-1'>
         <input class='form-control mb-2 col-${getWidthByLevel(level)} offset-${getOffsetByLevel(level)}' type='text' placeholder='${placeholder}' value='${value}'>
         <button type='button' class='btn btn-success col-2 offset-${getOffsetByLevel(level)} mr-2'>Save</button>
+        <button type='button' class='btn btn-info col-2 mr-2'>Add sub-list</button>
         <button type='button' class='btn btn-warning col-2 mr-2'>Cancel</button>
         <button type='button' class='btn btn-danger col-2'>Delete</button>
       </div>
@@ -172,9 +173,11 @@ const addDailyGoalToElement = function addDailyGoalToElement(
     }
   }
 
-  // Reserve one line to add new list.
-  traverse[level] = dgList.length;
-  containerElement.append(makeDailyGoalElement(level, null, traverse));
+  // Reserve one line to add new list, only if this is the top level.
+  if (level === 0) {
+    traverse[level] = dgList.length;
+    containerElement.append(makeDailyGoalElement(level, null, traverse));
+  }
 };
 
 const getCurrentDateKey = function getCurrentDateKey() {
