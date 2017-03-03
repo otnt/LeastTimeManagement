@@ -75,6 +75,11 @@ const bindDailyGoalElementAction = function bindDailyGoalElementAction(element) 
 
 const bindDailyGoalSaveButton = function bindDailyGoalSaveButton(button, id, input) {
   button.click(() => {
+    const val = input.val();
+    if (!val) {
+      return;
+    }
+
     // Path to desired JSON node.
     const path = id.split('-').map(num => parseInt(num, 10));
 
@@ -93,7 +98,7 @@ const bindDailyGoalSaveButton = function bindDailyGoalSaveButton(button, id, inp
       }
     }
 
-    node.value = input.val();
+    node.value = val;
 
     // Refresh content.
     loadDailyGoalList();
