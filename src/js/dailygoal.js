@@ -65,12 +65,12 @@ const loadDailyGoalListFromDatabase = function loadDailyGoalListFromDatabase(key
  *
  * `element` should be a jQuery element.
  */
-const bindDailyGoalElementAction = function bindDailyGoalElementAction(element) {
-  element.click(() => {
+const dailyGoalInputAction = function dailyGoalInputAction(element) {
+  return function() {
     if (!element.hasClass('dg-focus')) {
       element.toggleClass('dg-focus');
     }
-  });
+  };
 };
 
 const dailyGoalSaveButtonAction = function dailyGoalSaveButtonAction(id, input) {
@@ -171,7 +171,7 @@ const makeDailyGoalElement = function makeDailyGoalElement(level, value, travers
       </div>
     </div>`);
 
-  bindDailyGoalElementAction(dailyGoalElement.find('div.row').first());
+  dailyGoalElement.find('input').first().click(dailyGoalInputAction(dailyGoalElement.find('div.row').first()));
 
   dailyGoalElement.find('button.dg-btn-save').first()
     .click(dailyGoalSaveButtonAction(id, dailyGoalElement.find('input')));
