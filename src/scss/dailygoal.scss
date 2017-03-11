@@ -14,11 +14,17 @@
     }
   }
 
-  .dg-keep {
+  .dg-add-new {
     button.dg-btn-delete {
       display: none;
     }
 
-    
+    .fa-check {
+      display: none;
+    }
   }
+}
+
+.fa-check {
+  color: #00bfff;
 }

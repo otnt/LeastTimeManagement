@@ -47,15 +47,15 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.placeholder = 'Add a daily goal...';
 
     // HTML elements.
-    this.insideWrapper = $(`<div class='row my-1 dg-keep'></div>`);
-    this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 1} offset-${this.getOffsetByLevel(level)} border-0' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
-    // this.done = $(`<span class="glyphicon glyphicon-ok-sign col-1 offset-${this.getOffsetByLevel(level) + this.getWidthByLevel(level) - 1}" aria-hidden="true"></span>`);
+    this.insideWrapper = $(`<div class='row my-1 dg-add-new'></div>`);
+    this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 2} offset-${this.getOffsetByLevel(level)} border-0' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
+    this.done = $(`<div class='mb-2 col'><i class="fa fa-check" aria-hidden="true"></i></div>`);
     this.saveButton = $(`<button type='button' class='dg-btn-save btn btn-success col-2 offset-${this.getOffsetByLevel(level)} mr-2'>Save</button>`);
     this.sublistButton = $(`<button type='button' class='dg-btn-sub-list btn btn-info col-2 mr-2'>Subtask</button>`);
     this.deleteButton = $(`<button type='button' class='dg-btn-delete btn btn-danger col-2'>Delete</button>`);
 
     // Put HTML elements together.
-    this.insideWrapper.append(this.input, this.saveButton);
+    this.insideWrapper.append(this.input, this.done, this.saveButton);
     // No sublist at last level.
     if (level < this.MAX_LEVEL - 1) {
        this.insideWrapper.append(this.sublistButton);
@@ -112,7 +112,7 @@ class DailyGoalRealNode extends DailyGoalNode {
 
     if (!isEmpty && isLast) {
       // Last but not empty, then append new node.
-      this.insideWrapper.removeClass('dg-keep');
+      this.insideWrapper.removeClass('dg-add-new');
       const next = new DailyGoalRealNode(this.level);
       parent.addChild(next);
     } else if (isEmpty && !isLast) {
@@ -155,10 +155,10 @@ class DailyGoalRealNode extends DailyGoalNode {
   delete() {
     this.removeSelf();
 
-    // If only remaining element is a dg-keep element, then remove it.
+    // If only remaining element is a dg-add-new element, then remove it.
     const parent = this.parent;
     if (parent.children.length === 1
-      && parent.children[0].insideWrapper.hasClass('dg-keep')
+      && parent.children[0].insideWrapper.hasClass('dg-add-new')
       && this.level !== 0) {
       parent.children[0].wrapper.remove();
     }
