@@ -54,7 +54,7 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.insideWrapper = $(`<div class='row my-1 dg-add-new'></div>`);
     this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 2} offset-${this.getOffsetByLevel(level)} border-0' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
     this.checkButton = $(`
-      <a class='mb-2 col dg-check'>
+      <a class='mb-2 col vh-center'>
         <i class="fa fa-check" aria-hidden="true"></i>
         <i class="fa fa-repeat" aria-hidden="true"></i>
       </a>`);
