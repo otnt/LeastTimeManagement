@@ -1,12 +1,13 @@
 {
-  "name": "electron-quick-start",
+  "name": "LeastTimeManagement",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A minimal time management tool that fixs 99% problems.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "test": "./node_modules/mocha/bin/mocha",
-    "lint": "bash ./lint.sh"
+    "lint": "bash ./lint.sh",
+    "package": "electron-packager . --platform=darwin --out=./build --overwrite"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -25,6 +26,7 @@
     "browserify": "^14.1.0",
     "chai-as-promised": "^6.0.0",
     "electron": "^1.4.15",
+    "electron-packager": "^8.5.2",
     "electron-prebuilt": "^1.4.13",
     "eslint": "^3.15.0",
     "eslint-config-airbnb-base": "^11.1.0",
