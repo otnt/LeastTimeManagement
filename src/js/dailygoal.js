@@ -1,3 +1,7 @@
+let root = null;
+
+const localforage = require('localforage');
+
 /*
  * Base daily goal item.
  */
@@ -132,6 +136,11 @@ class DailyGoalRealNode extends DailyGoalNode {
         this.removeSelf();
       }
     }
+
+    // Save value.
+    this.value = this.input.val();
+
+    saveData(root);
   }
 
   // If click/focus on any other element besides current inside wrapper,
@@ -189,13 +198,42 @@ class DailyGoalRealNode extends DailyGoalNode {
   }
 }
 
+const saveNodeData = function saveNodeData(node) {
+  if (!node.value && node.children.length === 0) {
+    return null;
+  }
+
+  const data = {
+    'value': node.value,
+    'children': []
+  };
+  for (let i = 0; i < node.children.length; ++i) {
+    const nodeData = saveNodeData(node.children[i]);
+    if (nodeData) {
+      data.children.push(nodeData);
+    }
+  }
+
+  return data;
+};
+
+const saveData = function saveData(node) {
+  const data = saveNodeData(node);
+
+  localforage.setItem('test', JSON.stringify(data)).then(() => {
+    console.log('saved');
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
 /**
  * Render daily goal list.
  */
 const init = function init() {
   // Outmost wrapper for all daily goal nodes. The root itself has no
   // text value.
-  const root = new DailyGoalNode();
+  root = new DailyGoalNode();
 
   // First/default daily goal node to be appended, so that user could
   // start editing.
@@ -207,24 +245,3 @@ const init = function init() {
 };
 
 $(document).ready(init);
-
-/*
-// Localforage module is local simple database.
-const localforage = require('localforage');
-
-const loadDailyGoalListFromDatabase = function loadDailyGoalListFromDatabase(key) {
-  // Load daily goal data from database, then render to front end.
-  localforage.getItem(key).then((value) => {
-    // If the value is empty or null, then leave it as empty list.
-    if (!value) {
-      dailyGoalData = [];
-    } else {
-      dailyGoalData = value;
-    }
-
-    loadDailyGoalList();
-  }).catch((err) => {
-    console.log(err);
-  });
-};
-*/
