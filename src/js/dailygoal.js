@@ -2,6 +2,8 @@ let root = null;
 
 const localforage = require('localforage');
 
+const {dialog} = require('electron').remote;
+
 /*
  * Base daily goal item.
  */
@@ -244,10 +246,28 @@ const reset = function reset() {
   // Render view.
   root.addChild(first);
   $('#dg-container').append(root.wrapper);
+
+  // Save to clean database.
+  saveData(root);
 };
 
 const init = function init() {
-  $('#dg-refresh').click(reset);
+  $('#dg-refresh').click(() => {
+    dialog.showMessageBox(null, {
+      type: 'question',
+      buttons: ['Reset', 'Cancel'],
+      defaultId: 1,
+      title: 'Reset',
+      message: 'Are you sure to reset?',
+      detail: 'Reset will remove all your current tasks! Only reset when you finished all the tasks.'
+    }, (response) => {
+      if (response === 0) {
+        reset();
+      }
+    });
+  });
+
+  // By default, reset everything..
   reset();
 };
 
