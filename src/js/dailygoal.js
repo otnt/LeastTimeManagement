@@ -51,8 +51,7 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 1} offset-${this.getOffsetByLevel(level)} border-0' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
     // this.done = $(`<span class="glyphicon glyphicon-ok-sign col-1 offset-${this.getOffsetByLevel(level) + this.getWidthByLevel(level) - 1}" aria-hidden="true"></span>`);
     this.saveButton = $(`<button type='button' class='dg-btn-save btn btn-success col-2 offset-${this.getOffsetByLevel(level)} mr-2'>Save</button>`);
-    this.sublistButton = $(`<button type='button' class='dg-btn-sub-list btn btn-info col-2 mr-2'>Add sub-list</button>`);
-    this.cancelButton = $(`<button type='button' class='dg-btn-cancel btn btn-warning col-2 mr-2'>Cancel</button>`);
+    this.sublistButton = $(`<button type='button' class='dg-btn-sub-list btn btn-info col-2 mr-2'>Subtask</button>`);
     this.deleteButton = $(`<button type='button' class='dg-btn-delete btn btn-danger col-2'>Delete</button>`);
 
     // Put HTML elements together.
@@ -61,7 +60,7 @@ class DailyGoalRealNode extends DailyGoalNode {
     if (level < this.MAX_LEVEL - 1) {
        this.insideWrapper.append(this.sublistButton);
     }
-    this.insideWrapper.append(this.cancelButton, this.deleteButton);
+    this.insideWrapper.append(this.deleteButton);
     this.wrapper.append(this.insideWrapper);
 
     // Register actions.
@@ -74,8 +73,6 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.saveButton.click(this.save.bind(this));
     // Click sublist button. Create another daily goal item, and attach to itself.
     this.sublistButton.click(this.sublist.bind(this));
-    // Cancel edit.
-    this.cancelButton.click(this.cancel.bind(this));
     // Delete this item.
     this.deleteButton.click(this.delete.bind(this));
 
@@ -152,11 +149,6 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.addChild(child);
     child.input.focus();
 
-  }
-
-  // TODO Not really implemented.
-  cancel() {
-    this.unfocus();
   }
 
   // Remove this item.
