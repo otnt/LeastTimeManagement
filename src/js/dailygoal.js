@@ -230,7 +230,9 @@ const saveData = function saveData(node) {
 /**
  * Render daily goal list.
  */
-const init = function init() {
+const reset = function reset() {
+  $('#dg-container').empty();
+
   // Outmost wrapper for all daily goal nodes. The root itself has no
   // text value.
   root = new DailyGoalNode();
@@ -241,7 +243,12 @@ const init = function init() {
 
   // Render view.
   root.addChild(first);
-  $('.container').append(root.wrapper);
+  $('#dg-container').append(root.wrapper);
+};
+
+const init = function init() {
+  $('#dg-refresh').click(reset);
+  reset();
 };
 
 $(document).ready(init);
