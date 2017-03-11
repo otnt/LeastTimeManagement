@@ -45,16 +45,17 @@ class DailyGoalRealNode extends DailyGoalNode {
    * level: control indentation
    * value: text content in this item
    */
-  constructor(level, value) {
+  constructor(level, value, done, old) {
     super();
 
     this.level = level;
     this.value = value || '';
     this.placeholder = 'Add a daily goal...';
+    this.done = done || false;
 
     // HTML elements.
-    this.insideWrapper = $(`<div class='row my-1 dg-add-new'></div>`);
-    this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 2} offset-${this.getOffsetByLevel(level)} border-0' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
+    this.insideWrapper = $(`<div class='row my-1 ${old?"":"dg-add-new"} ${old&&done?"dg-done":""}'></div>`);
+    this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 2} offset-${this.getOffsetByLevel(level)} ${old?"":"border-0"}' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
     this.checkButton = $(`
       <a class='mb-2 col vh-center'>
         <i class="fa fa-check" aria-hidden="true"></i>
@@ -186,6 +187,7 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.unfocus();
 
     this.insideWrapper.toggleClass('dg-done');
+    this.done = !this.done;
   }
 
   removeSelf() {
@@ -201,12 +203,9 @@ class DailyGoalRealNode extends DailyGoalNode {
 }
 
 const saveNodeData = function saveNodeData(node) {
-  if (!node.value && node.children.length === 0) {
-    return null;
-  }
-
   const data = {
     'value': node.value,
+    'done': node.done,
     'children': []
   };
   for (let i = 0; i < node.children.length; ++i) {
@@ -227,6 +226,29 @@ const saveData = function saveData(node) {
   }).catch((err) => {
     console.log(err);
   });
+};
+
+const loadNodeData = function loadNodeData(data, level) {
+  const old = data.value || data.children.length !== 0;
+  const node = new DailyGoalRealNode(level, data.value, data.done, old);
+  for (let i = 0; i < data.children.length; ++i) {
+    const n = loadNodeData(data.children[i], level + 1);
+    node.addChild(n);
+  }
+  return node;
+};
+
+const loadData = function loadData(node) {
+  localforage.getItem('data').then((s) => {
+    const data = JSON.parse(s);
+    for (let i = 0; i < data.children.length; ++i) {
+      node.addChild(loadNodeData(data.children[i], 0));
+    }
+
+    console.log('loaded');
+  }).catch((err) => {
+    console.log(err);
+  })
 };
 
 /**
@@ -267,8 +289,10 @@ const init = function init() {
     });
   });
 
-  // By default, reset everything..
-  reset();
+  // By default, load from database.
+  root = new DailyGoalNode();
+  loadData(root);
+  $('#dg-container').append(root.wrapper);
 };
 
 $(document).ready(init);
