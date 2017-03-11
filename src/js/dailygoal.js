@@ -1,48 +1,211 @@
-/* eslint-disable no-param-reassign */
-
-// MAX_WIDTH of Bootstrap is 12 columns.
-const MAX_WIDTH = 12;
-
-// Maximum level.
-const MAX_LEVEL = 4;
-
-// Use date as key to database.
-let dateKey = "";
-
-/* JSON-formated data of daily goal lists.
- * Format:
- * [
- *   {
- *     value: xxx,
- *     children: [
- *       {value: xxx; children: [...]}
- *       ...
- *     ]
- *   },
- *   ...
- * ]
+/*
+ * Base daily goal item.
  */
-let dailyGoalData = [];
+class DailyGoalNode {
 
+  constructor() {
+    this.children = [];
+    this.wrapper = $(`<div class='dg-lists'></div>`);
+  }
+
+  addChild(dailyGoalNode) {
+    // Bind child logically.
+    this.children.push(dailyGoalNode);
+    dailyGoalNode.parent = this;
+
+    // Update DOM to show child.
+    this.wrapper.append(dailyGoalNode.wrapper);
+  }
+}
+
+/*
+ * Real/useful item in daily goal list.
+ *
+ * It could be nested or contains many levels of children.
+ */
+class DailyGoalRealNode extends DailyGoalNode {
+
+  // MAX_WIDTH of Bootstrap is 12 columns.
+  get MAX_WIDTH() {
+   return 12;
+  }
+
+  // Maximum level.
+  get MAX_LEVEL() {
+    return 4;
+  }
+
+  /*
+   * level: control indentation
+   * value: text content in this item
+   */
+  constructor(level, value) {
+    super();
+
+    this.level = level;
+    this.value = value || '';
+    this.placeholder = 'Add a daily goal...';
+
+    // HTML elements.
+    this.insideWrapper = $(`<div class='row my-1 dg-keep'></div>`);
+    this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 1} offset-${this.getOffsetByLevel(level)} border-0' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
+    // this.done = $(`<span class="glyphicon glyphicon-ok-sign col-1 offset-${this.getOffsetByLevel(level) + this.getWidthByLevel(level) - 1}" aria-hidden="true"></span>`);
+    this.saveButton = $(`<button type='button' class='dg-btn-save btn btn-success col-2 offset-${this.getOffsetByLevel(level)} mr-2'>Save</button>`);
+    this.sublistButton = $(`<button type='button' class='dg-btn-sub-list btn btn-info col-2 mr-2'>Add sub-list</button>`);
+    this.cancelButton = $(`<button type='button' class='dg-btn-cancel btn btn-warning col-2 mr-2'>Cancel</button>`);
+    this.deleteButton = $(`<button type='button' class='dg-btn-delete btn btn-danger col-2'>Delete</button>`);
+
+    // Put HTML elements together.
+    this.insideWrapper.append(this.input, this.saveButton);
+    // No sublist at last level.
+    if (level < this.MAX_LEVEL - 1) {
+       this.insideWrapper.append(this.sublistButton);
+    }
+    this.insideWrapper.append(this.cancelButton, this.deleteButton);
+    this.wrapper.append(this.insideWrapper);
+
+    // Register actions.
+
+    // Focus on this daily goal item.
+    this.input.focus(this.focus.bind(this));
+    // Unfocus on current item.
+    this.input.blur(this.blur.bind(this));
+    // Click save button. Save text value to daily goal image node.
+    this.saveButton.click(this.save.bind(this));
+    // Click sublist button. Create another daily goal item, and attach to itself.
+    this.sublistButton.click(this.sublist.bind(this));
+    // Cancel edit.
+    this.cancelButton.click(this.cancel.bind(this));
+    // Delete this item.
+    this.deleteButton.click(this.delete.bind(this));
+
+  }
+
+  getWidthByLevel(level) {
+    return this.MAX_WIDTH - level;
+  };
+
+  getOffsetByLevel(level) {
+    return level;
+  };
+
+  // Add focus class tag, so that button could appear.
+  focus() {
+    this.insideWrapper.addClass('dg-focus');
+    this.input.removeClass('border-0');
+  }
+
+  // Remove focus class tag, so that button would disappear.
+  unfocus() {
+    this.insideWrapper.removeClass('dg-focus');
+  }
+
+  // Save current value and remove focus class tag.
+  save() {
+    // Remove focus class tag.
+    this.unfocus();
+
+    // Empty item.
+    const isEmpty = !this.input.val();
+
+    // If current modifying item is the last one.
+    const parent = this.parent;
+    const index = parent.children.indexOf(this);
+    const isLast = parent.children.length === index + 1;
+
+    if (!isEmpty && isLast) {
+      // Last but not empty, then append new node.
+      this.insideWrapper.removeClass('dg-keep');
+      const next = new DailyGoalRealNode(this.level);
+      parent.addChild(next);
+    } else if (isEmpty && !isLast) {
+      // Is empty, but not last, keep it and set to default value.
+      this.input.val('Empty');
+    } else if (isEmpty && isLast) {
+      // Is empty, and is last one, remove border.
+      this.input.addClass('border-0');
+      if (parent.children.length === 1 && this.level !== 0) {
+        // Is empty, is last, and not at top level, then remove it.
+        this.removeSelf();
+      }
+    }
+  }
+
+  // If click/focus on any other element besides current inside wrapper,
+  // then save current element.
+  blur() {
+    // When blur, automatically save, except just clicked a button.
+    if(this.insideWrapper.is(':active')) {
+      return;
+    }
+    this.save();
+  }
+
+  // Save current element and append sublist.
+  sublist() {
+    if (!this.input.val()) {
+      this.input.val('Empty');
+    }
+    this.save();
+
+    const child = new DailyGoalRealNode(this.level + 1);
+    this.addChild(child);
+    child.input.focus();
+
+  }
+
+  // TODO Not really implemented.
+  cancel() {
+    this.unfocus();
+  }
+
+  // Remove this item.
+  delete() {
+    this.removeSelf();
+
+    // If only remaining element is a dg-keep element, then remove it.
+    const parent = this.parent;
+    if (parent.children.length === 1
+      && parent.children[0].insideWrapper.hasClass('dg-keep')
+      && this.level !== 0) {
+      parent.children[0].wrapper.remove();
+    }
+  }
+
+  removeSelf() {
+    const parent = this.parent;
+
+    // Remove itself from parent's children list.
+    const index = parent.children.indexOf(this);
+    parent.children.splice(index, 1);
+
+    // Update DOM to remove child.
+    this.wrapper.remove();
+  }
+}
+
+/**
+ * Render daily goal list.
+ */
+const init = function init() {
+  // Outmost wrapper for all daily goal nodes. The root itself has no
+  // text value.
+  const root = new DailyGoalNode();
+
+  // First/default daily goal node to be appended, so that user could
+  // start editing.
+  const first = new DailyGoalRealNode(0);
+
+  // Render view.
+  root.addChild(first);
+  $('.container').append(root.wrapper);
+};
+
+$(document).ready(init);
+
+/*
 // Localforage module is local simple database.
 const localforage = require('localforage');
-
-// Sprintf module is same as printf in C.
-const sprintf = require('sprintf-js').sprintf;
-
-// jQuery.
-const $ = require('jquery');
-
-const loadDailyGoalList = function loadDailyGoalList() {
-  // Remove all daily goal lists.
-  $('.container').find('.dg-lists').remove();
-
-  // Render to front end.
-  addDailyGoalToElement(
-    $('.container'),
-    dailyGoalData,
-    []);
-};
 
 const loadDailyGoalListFromDatabase = function loadDailyGoalListFromDatabase(key) {
   // Load daily goal data from database, then render to front end.
@@ -59,178 +222,4 @@ const loadDailyGoalListFromDatabase = function loadDailyGoalListFromDatabase(key
     console.log(err);
   });
 };
-
-/**
- * When click a wait element, turn into active.
- *
- * `element` should be a jQuery element.
- */
-const dailyGoalInputAction = function dailyGoalInputAction(element) {
-  return function() {
-    if (!element.hasClass('dg-focus')) {
-      element.toggleClass('dg-focus');
-    }
-  };
-};
-
-const dailyGoalSaveButtonAction = function dailyGoalSaveButtonAction(id, input) {
-  return function() {
-    const val = input.val();
-    if (!val) {
-      return;
-    }
-
-    // Path to desired JSON node.
-    // ID format: dg-x-y-z-...
-    const path = id.split('-').slice(1).map(num => parseInt(num, 10));
-
-    // Route to the node.
-    let node = dailyGoalData;
-    for (let level = 0; level < path.length; level += 1) {
-      // At level `level`, the childIdx-th child.
-      const childIdx = path[level];
-      if (level !== path.length - 1) {
-        node = node[childIdx].children;
-      } else if (childIdx !== node.length) {
-        node = node[childIdx];
-      } else {
-        node.push({ value: '', children: [] });
-        node = node[childIdx];
-      }
-    }
-
-    node.value = val;
-
-    // Refresh content.
-    loadDailyGoalList();
-  };
-};
-
-const dailyGoalAddSublistButtonAction = function dailyGoalAddSublistButtonAction(id, input) {
-  return function() {
-    const val = input.val();
-    if (!val) {
-      return;
-    }
-
-    // Before add sublist, as if we saved the current list.
-    dailyGoalSaveButtonAction(id, input)();
-
-    // Path to desired JSON node.
-    // ID format: dg-x-y-z-...
-    const path = id.split('-').slice(1).map(num => parseInt(num, 10));
-
-    // Route to the node.
-    let node = $('.container').first();
-    for (let level = 0; level < path.length; level += 1) {
-      // At level `level`, the childIdx-th child.
-      const childIdx = path[level];
-      node = node.children(`.dg-lists`).eq(childIdx);
-    }
-
-    // Copy the path, and add new level (0) as the sublist traverse path.
-    const traverse = path.slice();
-    traverse.push(0);
-    const dgElement = makeDailyGoalElement(path.length, null, traverse);
-    node.append(dgElement);
-  }
-};
-
-const getWidthByLevel = function getWidthByLevel(level) {
-  return MAX_WIDTH - level;
-};
-
-const getOffsetByLevel = function getOffsetByLevel(level) {
-  return level;
-};
-
-/**
- * Make a daily goal element.
- *
- * level: level of each sub-list, control indentation
- * value: content in this sub-list
- * traverse: How to route to this list/node from root.
- */
-const makeDailyGoalElement = function makeDailyGoalElement(level, value, traverse) {
-  let placeholder = '';
-  if (!value) {
-    placeholder = 'Add a daily goal...';
-    // Value could be undefined etc.
-    value = '';
-  }
-
-  const id = `dg-${traverse.join('-')}`;
-
-  const dailyGoalElement = $(
-    `<div class='dg-lists' id='${id}'>
-      <div class='row my-1'>
-        <input class='form-control mb-2 col-${getWidthByLevel(level)} offset-${getOffsetByLevel(level)}' type='text' placeholder='${placeholder}' value='${value}'>
-        <button type='button' class='dg-btn-save btn btn-success col-2 offset-${getOffsetByLevel(level)} mr-2'>Save</button>
-        <button type='button' class='dg-btn-sub-list btn btn-info col-2 mr-2'>Add sub-list</button>
-        <button type='button' class='dg-btn-cancel btn btn-warning col-2 mr-2'>Cancel</button>
-        <button type='button' class='dg-btn-delete btn btn-danger col-2'>Delete</button>
-      </div>
-    </div>`);
-
-  dailyGoalElement.find('input').first().focus(dailyGoalInputAction(dailyGoalElement.find('div.row').first()));
-
-  dailyGoalElement.find('button.dg-btn-save').first()
-    .click(dailyGoalSaveButtonAction(id, dailyGoalElement.find('input')));
-
-  dailyGoalElement.find('button.dg-btn-sub-list').first()
-    .click(dailyGoalAddSublistButtonAction(id, dailyGoalElement.find('input')));
-
-
-  return dailyGoalElement;
-};
-
-/**
- * Recursively add all items in `dgList` to `containerElement`,
- * with indentation set by `level`.
- */
-const addDailyGoalToElement = function addDailyGoalToElement(
-  containerElement,
-  dgList,
-  traverse,
-  level = 0) {
-  for (let i = 0; i < dgList.length; i += 1) {
-    // Add traverse route.
-    traverse[level] = i;
-
-    // For each direct child in the same level, append to `containerElement`.
-    const dg = dgList[i];
-    const dgElement = makeDailyGoalElement(level, dg.value, traverse);
-    containerElement.append(dgElement);
-
-    // For children in next level, recursively call `addDailyGoalToElement` to
-    // attach children to this element.
-    if (level < MAX_LEVEL - 1) {
-      addDailyGoalToElement(dgElement, dg.children, traverse, level + 1);
-      // Remove last number as it is only used in children level.
-      traverse.pop();
-    }
-  }
-
-  // Reserve one line to add new list, only if this is the top level.
-  if (level === 0) {
-    traverse[level] = dgList.length;
-    containerElement.append(makeDailyGoalElement(level, null, traverse));
-  }
-};
-
-const getCurrentDateKey = function getCurrentDateKey() {
-  // Use YYYY-MM-dd as primary key in database.
-  const date = new Date();
-  const key = sprintf('%d%02d%02d', date.getFullYear(), date.getMonth(), date.getDate());
-  return key;
-};
-
-/**
- * Load database for daily goal list.
- */
-const init = function init() {
-  dateKey = getCurrentDateKey();
-  loadDailyGoalListFromDatabase(dateKey);
-};
-
-$(document).ready(init);
+*/

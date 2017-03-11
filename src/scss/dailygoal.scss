@@ -13,4 +13,12 @@
       display: block;
     }
   }
+
+  .dg-keep {
+    button.dg-btn-delete {
+      display: none;
+    }
+
+    
+  }
 }
