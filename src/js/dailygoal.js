@@ -220,7 +220,7 @@ const saveNodeData = function saveNodeData(node) {
 const saveData = function saveData(node) {
   const data = saveNodeData(node);
 
-  localforage.setItem('test', JSON.stringify(data)).then(() => {
+  localforage.setItem('data', JSON.stringify(data)).then(() => {
     console.log('saved');
   }).catch((err) => {
     console.log(err);
