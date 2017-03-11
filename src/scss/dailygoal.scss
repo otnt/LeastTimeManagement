@@ -19,12 +19,42 @@
       display: none;
     }
 
+    .fa-check, .fa-repeat {
+      display: none;
+    }
+  }
+
+  .fa-check {
+    display: block;
+  }
+
+  .fa-repeat {
+    display: none;
+  }
+
+  .dg-done {
+    input {
+      border: none;
+      text-decoration: line-through;
+      color: grey;
+    }
+
     .fa-check {
       display: none;
+    }
+
+    .fa-repeat {
+      display: block;
     }
   }
 }
 
-.fa-check {
+.fa-check, .fa-repeat {
   color: #00bfff;
+}
+
+.dg-check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

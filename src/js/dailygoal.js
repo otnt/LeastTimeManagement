@@ -49,13 +49,17 @@ class DailyGoalRealNode extends DailyGoalNode {
     // HTML elements.
     this.insideWrapper = $(`<div class='row my-1 dg-add-new'></div>`);
     this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 2} offset-${this.getOffsetByLevel(level)} border-0' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
-    this.done = $(`<div class='mb-2 col'><i class="fa fa-check" aria-hidden="true"></i></div>`);
+    this.checkButton = $(`
+      <a class='mb-2 col dg-check'>
+        <i class="fa fa-check" aria-hidden="true"></i>
+        <i class="fa fa-repeat" aria-hidden="true"></i>
+      </a>`);
     this.saveButton = $(`<button type='button' class='dg-btn-save btn btn-success col-2 offset-${this.getOffsetByLevel(level)} mr-2'>Save</button>`);
     this.sublistButton = $(`<button type='button' class='dg-btn-sub-list btn btn-info col-2 mr-2'>Subtask</button>`);
     this.deleteButton = $(`<button type='button' class='dg-btn-delete btn btn-danger col-2'>Delete</button>`);
 
     // Put HTML elements together.
-    this.insideWrapper.append(this.input, this.done, this.saveButton);
+    this.insideWrapper.append(this.input, this.checkButton, this.saveButton);
     // No sublist at last level.
     if (level < this.MAX_LEVEL - 1) {
        this.insideWrapper.append(this.sublistButton);
@@ -75,6 +79,8 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.sublistButton.click(this.sublist.bind(this));
     // Delete this item.
     this.deleteButton.click(this.delete.bind(this));
+    // Done with item.
+    this.checkButton.click(this.check.bind(this));
 
   }
 
@@ -162,6 +168,13 @@ class DailyGoalRealNode extends DailyGoalNode {
       && this.level !== 0) {
       parent.children[0].wrapper.remove();
     }
+  }
+
+  check() {
+    // Remove focus class tag.
+    this.unfocus();
+
+    this.insideWrapper.toggleClass('dg-done');
   }
 
   removeSelf() {

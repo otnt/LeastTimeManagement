@@ -8,10 +8,27 @@
   display: block; }
 .dg-lists .dg-add-new button.dg-btn-delete {
   display: none; }
-.dg-lists .dg-add-new .fa-check {
+.dg-lists .dg-add-new .fa-check, .dg-lists .dg-add-new .fa-repeat {
   display: none; }
+.dg-lists .fa-check {
+  display: block; }
+.dg-lists .fa-repeat {
+  display: none; }
+.dg-lists .dg-done input {
+  border: none;
+  text-decoration: line-through;
+  color: grey; }
+.dg-lists .dg-done .fa-check {
+  display: none; }
+.dg-lists .dg-done .fa-repeat {
+  display: block; }
 
-.fa-check {
+.fa-check, .fa-repeat {
   color: #00bfff; }
+
+.dg-check {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
 
 /*# sourceMappingURL=dailygoal.css.map */
