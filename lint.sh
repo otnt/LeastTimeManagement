@@ -4,5 +4,5 @@ JS_DEV="src/js"
 
 for file in ${JS_DEV}/*.js
 do
-  ./node_modules/.bin/eslint ${file}
+  ./node_modules/.bin/eslint ${file} --fix
 done

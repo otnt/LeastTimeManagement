@@ -2,7 +2,7 @@ let root = null;
 
 const localforage = require('localforage');
 
-const {dialog} = require('electron').remote;
+const { dialog } = require('electron').remote;
 
 /*
  * Base daily goal item.
@@ -11,7 +11,7 @@ class DailyGoalNode {
 
   constructor() {
     this.children = [];
-    this.wrapper = $(`<div class='dg-lists'></div>`);
+    this.wrapper = $('<div class="dg-lists"></div>');
   }
 
   addChild(dailyGoalNode) {
@@ -32,12 +32,12 @@ class DailyGoalNode {
 class DailyGoalRealNode extends DailyGoalNode {
 
   // MAX_WIDTH of Bootstrap is 12 columns.
-  get MAX_WIDTH() {
-   return 12;
+  static get MAX_WIDTH() {
+    return 12;
   }
 
   // Maximum level.
-  get MAX_LEVEL() {
+  static get MAX_LEVEL() {
     return 4;
   }
 
@@ -54,22 +54,22 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.done = done || false;
 
     // HTML elements.
-    this.insideWrapper = $(`<div class='row my-1 ${old?"":"dg-add-new"} ${old&&done?"dg-done":""}'></div>`);
-    this.input = $(`<input class='form-control mb-2 col-${this.getWidthByLevel(level) - 2} offset-${this.getOffsetByLevel(level)} ${old?"":"border-0"}' type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
+    this.insideWrapper = $(`<div class="row my-1 ${old ? '' : 'dg-add-new'} ${old && done ? 'dg-done' : ''}"></div>`);
+    this.input = $(`<input class="form-control mb-2 col-${DailyGoalRealNode.getWidthByLevel(level) - 2} offset-${this.getOffsetByLevel(level)} ${old ? '' : 'border-0'}" type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
     this.checkButton = $(`
       <a class='mb-2 col vh-center'>
         <i class="fa fa-check" aria-hidden="true"></i>
         <i class="fa fa-repeat" aria-hidden="true"></i>
       </a>`);
-    this.saveButton = $(`<button type='button' class='dg-btn-save btn btn-success col-2 offset-${this.getOffsetByLevel(level)} mr-2'>Save</button>`);
-    this.sublistButton = $(`<button type='button' class='dg-btn-sub-list btn btn-info col-2 mr-2'>Subtask</button>`);
-    this.deleteButton = $(`<button type='button' class='dg-btn-delete btn btn-danger col-2'>Delete</button>`);
+    this.saveButton = $(`<button type='button' class='dg-btn-save btn btn-success col-2 offset-${DailyGoalRealNode.getOffsetByLevel(level)} mr-2'>Save</button>`);
+    this.sublistButton = $('<button type=\'button\' class=\'dg-btn-sub-list btn btn-info col-2 mr-2\'>Subtask</button>');
+    this.deleteButton = $('<button type=\'button\' class=\'dg-btn-delete btn btn-danger col-2\'>Delete</button>');
 
     // Put HTML elements together.
     this.insideWrapper.append(this.input, this.checkButton, this.saveButton);
     // No sublist at last level.
-    if (level < this.MAX_LEVEL - 1) {
-       this.insideWrapper.append(this.sublistButton);
+    if (level < DailyGoalRealNode.MAX_LEVEL - 1) {
+      this.insideWrapper.append(this.sublistButton);
     }
     this.insideWrapper.append(this.deleteButton);
     this.wrapper.append(this.insideWrapper);
@@ -88,16 +88,15 @@ class DailyGoalRealNode extends DailyGoalNode {
     this.deleteButton.click(this.delete.bind(this));
     // Done with item.
     this.checkButton.click(this.check.bind(this));
-
   }
 
-  getWidthByLevel(level) {
-    return this.MAX_WIDTH - level;
-  };
+  static getWidthByLevel(level) {
+    return DailyGoalRealNode.MAX_WIDTH - level;
+  }
 
-  getOffsetByLevel(level) {
+  static getOffsetByLevel(level) {
     return level;
-  };
+  }
 
   // Add focus class tag, so that button could appear.
   focus() {
@@ -150,7 +149,7 @@ class DailyGoalRealNode extends DailyGoalNode {
   // then save current element.
   blur() {
     // When blur, automatically save, except just clicked a button.
-    if(this.insideWrapper.is(':active')) {
+    if (this.insideWrapper.is(':active')) {
       return;
     }
     this.save();
@@ -166,7 +165,6 @@ class DailyGoalRealNode extends DailyGoalNode {
     const child = new DailyGoalRealNode(this.level + 1);
     this.addChild(child);
     child.input.focus();
-
   }
 
   // Remove this item.
@@ -204,11 +202,11 @@ class DailyGoalRealNode extends DailyGoalNode {
 
 const saveNodeData = function saveNodeData(node) {
   const data = {
-    'value': node.value,
-    'done': node.done,
-    'children': []
+    value: node.value,
+    done: node.done,
+    children: [],
   };
-  for (let i = 0; i < node.children.length; ++i) {
+  for (let i = 0; i < node.children.length; i += 1) {
     const nodeData = saveNodeData(node.children[i]);
     if (nodeData) {
       data.children.push(nodeData);
@@ -231,7 +229,7 @@ const saveData = function saveData(node) {
 const loadNodeData = function loadNodeData(data, level) {
   const old = data.value || data.children.length !== 0;
   const node = new DailyGoalRealNode(level, data.value, data.done, old);
-  for (let i = 0; i < data.children.length; ++i) {
+  for (let i = 0; i < data.children.length; i += 1) {
     const n = loadNodeData(data.children[i], level + 1);
     node.addChild(n);
   }
@@ -241,14 +239,14 @@ const loadNodeData = function loadNodeData(data, level) {
 const loadData = function loadData(node) {
   localforage.getItem('data').then((s) => {
     const data = JSON.parse(s);
-    for (let i = 0; i < data.children.length; ++i) {
+    for (let i = 0; i < data.children.length; i += 1) {
       node.addChild(loadNodeData(data.children[i], 0));
     }
 
     console.log('loaded');
   }).catch((err) => {
     console.log(err);
-  })
+  });
 };
 
 /**
@@ -281,7 +279,7 @@ const init = function init() {
       defaultId: 1,
       title: 'Reset',
       message: 'Are you sure to reset?',
-      detail: 'Reset will remove all your current tasks! Only reset when you finished all the tasks.'
+      detail: 'Reset will remove all your current tasks! Only reset when you finished all the tasks.',
     }, (response) => {
       if (response === 0) {
         reset();
