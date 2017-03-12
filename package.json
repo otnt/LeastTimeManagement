@@ -20,19 +20,13 @@
   "author": "Pufan Jiang",
   "license": "CC0-1.0",
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-preset-env": "^1.1.8",
-    "bluebird": "^3.4.7",
-    "browserify": "^14.1.0",
+    "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "electron": "^1.6.2",
     "electron-builder": "^15.3.0",
-    "electron-packager": "^8.5.2",
-    "electron-prebuilt": "^1.4.13",
     "eslint": "^3.15.0",
     "eslint-config-airbnb-base": "^11.1.0",
     "eslint-plugin-import": "^2.2.0",
-    "intern": "^3.4.2",
     "mocha": "^3.2.0",
     "spectron": "^3.6.0"
   },
@@ -40,13 +34,7 @@
     "bootstrap": "^4.0.0-alpha.6",
     "fontawesome": "^4.7.2",
     "jquery": "^3.1.0",
-    "localforage": "^1.5.0",
-    "sprintf-js": "^1.0.3"
-  },
-  "babel": {
-    "presets": [
-      "env"
-    ]
+    "localforage": "^1.5.0"
   },
   "build": {
     "appId": "LeastTimeManagement",
