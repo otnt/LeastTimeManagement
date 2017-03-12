@@ -7,17 +7,17 @@
     "start": "electron .",
     "test": "./node_modules/mocha/bin/mocha",
     "lint": "bash ./lint.sh",
-    "package": "electron-packager . --platform=darwin --out=./build --overwrite"
+    "pack": "build --dir",
+    "dist": "build"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/otnt/LeastTimeManagement",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "TimeManagement",
+    "time",
+    "least",
+    "LeastTimeManagement"
   ],
-  "author": "GitHub",
+  "author": "Pufan Jiang",
   "license": "CC0-1.0",
   "devDependencies": {
     "babel-cli": "^6.23.0",
@@ -25,7 +25,8 @@
     "bluebird": "^3.4.7",
     "browserify": "^14.1.0",
     "chai-as-promised": "^6.0.0",
-    "electron": "^1.4.15",
+    "electron": "^1.6.2",
+    "electron-builder": "^15.3.0",
     "electron-packager": "^8.5.2",
     "electron-prebuilt": "^1.4.13",
     "eslint": "^3.15.0",
@@ -46,5 +47,11 @@
     "presets": [
       "env"
     ]
+  },
+  "build": {
+    "appId": "LeastTimeManagement",
+    "mac": {
+      "category": "TimeManagement"
+    }
   }
 }
