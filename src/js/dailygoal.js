@@ -55,7 +55,7 @@ class DailyGoalRealNode extends DailyGoalNode {
 
     // HTML elements.
     this.insideWrapper = $(`<div class="row my-1 ${old ? '' : 'dg-add-new'} ${old && done ? 'dg-done' : ''}"></div>`);
-    this.input = $(`<input class="form-control mb-2 col-${DailyGoalRealNode.getWidthByLevel(level) - 2} offset-${this.getOffsetByLevel(level)} ${old ? '' : 'border-0'}" type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
+    this.input = $(`<input class="form-control mb-2 col-${DailyGoalRealNode.getWidthByLevel(level) - 2} offset-${DailyGoalRealNode.getOffsetByLevel(level)} ${old ? '' : 'border-0'}" type='text' placeholder='${this.placeholder}' value='${this.value}'>`);
     this.checkButton = $(`
       <a class='mb-2 col vh-center'>
         <i class="fa fa-check" aria-hidden="true"></i>
@@ -291,6 +291,10 @@ const init = function init() {
   root = new DailyGoalNode();
   loadData(root);
   $('#dg-container').append(root.wrapper);
+
+  $('#dg-back').click(() => {
+    window.location = '../../index.html';
+  });
 };
 
 $(document).ready(init);
