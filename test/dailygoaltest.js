@@ -1,6 +1,6 @@
 const Application = require('spectron').Application;
 const assert = require('assert');
-const electron = require('electron-prebuilt');
+const electron = require('electron');
 const chai = require('chai');
 const expect = chai.expect;
 const chaiAsPromised = require('chai-as-promised');
