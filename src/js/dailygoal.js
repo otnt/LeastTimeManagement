@@ -217,10 +217,10 @@ const saveNodeData = function saveNodeData(node) {
 };
 
 const saveData = function saveData(node) {
-  const data = saveNodeData(node);
+  const data = JSON.stringify(saveNodeData(node));
 
-  localforage.setItem('data', JSON.stringify(data)).then(() => {
-    console.log('saved');
+  localforage.setItem('data', data).then(() => {
+    console.log(`saved data ${data}`);
   }).catch((err) => {
     console.log(err);
   });
@@ -269,6 +269,14 @@ const reset = function reset() {
 
   // Save to clean database.
   saveData(root);
+
+  // Save current time.
+  const timeMs = JSON.stringify({ 'time' : Date.now() });
+  localforage.setItem('time', timeMs).then(() => {
+    console.log(`saved time ${timeMs}`);
+  }).catch((err) => {
+    console.log(err);
+  });
 };
 
 const init = function init() {
