@@ -22,10 +22,39 @@
   <body>
     <div class="container">
       <div class="row my-5">
-        <div class="col-6 offset-3 vh-center"><h1>Motivation</h1></div>
-        <a class="col-1 vh-center" id="mv-refresh"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+        <a class="col-1 vh-center" id="mv-back"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></a>
+        <div class="col-4 offset-3 vh-center"><h1>Motivation</h1></div>
       </div>
-      <div id="mv-container">
+      <div class="row">
+        <h4 class="col mx-auto vh-center" id="mv-timer"></h4>
+      </div>
+      <div class="row">
+        <h4 class="col mx-auto vh-center" id="mv-alert"></h4>
+      </div>
+      <div>
+        <div id="mv-setup">
+          <h4 class="vh-center mb-5">Set up your motivation</h4>
+          <form>
+            <p class="row">
+              <label for="mv-name" class="col-4">
+                <span>The product I want is: </span>
+              </label>
+              <input class="col" type="text" id="mv-name" name="product name" placeholder="product name" autofocus>
+            </p>
+            <p class="row">
+              <label for="mv-price" class="col-4">
+                <span>Product price: </span>
+              </label>
+              <input class="col" type="number" id="mv-price" name="product price" min="1" max="100000" step="10">$
+            </p>
+            <p class="row">
+              <label for="mv-url" class="col-4">
+                <span>Url for product image: </span>
+              </label>
+              <input class="col" type="url" id="mv-url" name="image url" placeholder="image url">
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   </body>

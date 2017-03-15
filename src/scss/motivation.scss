@@ -1,4 +1,4 @@
-.fa-refresh {
+.fa-refresh, .fa-arrow-circle-left {
   color: #00bfff;
 }
 
@@ -6,4 +6,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#mv-timer {
+  color: #00bfff;
+}
+
+.mv-alert-pass {
+  color: green;
+}
+
+.mv-alert-fail {
+  color: red;
+}
+
+#mv-setup {
+  display: none;
 }
